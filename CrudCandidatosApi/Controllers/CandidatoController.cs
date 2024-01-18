@@ -1,0 +1,115 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CrudCandidatos.Application.Interfaces;
+using CrudCandidatos.Domain.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using OpenQA.Selenium;
+
+namespace CrudCandidatosApi.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CandidatosController : ControllerBase
+    {
+        private readonly ICandidatoService _CandidatoService;
+
+        public CandidatosController(ICandidatoService CandidatoService)
+        {
+            _CandidatoService = CandidatoService ?? throw new ArgumentNullException(nameof(CandidatoService));
+        }
+
+        [HttpGet("ListarCandidatos")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Candidato>))]
+        public async Task<IActionResult> ListarCandidatos()
+        {
+            var Candidatos = await _CandidatoService.ListarCandidatosAsync();
+            return Ok(Candidatos);
+        }
+
+        [HttpGet("ObterCandidatoPorId/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Candidato))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ObterCandidatoPorId(int id)
+        {
+            var Candidato = await _CandidatoService.ObterCandidatoPorIdAsync(id);
+
+            if (Candidato == null)
+            {
+                return NotFound("Candidato não encontrado.");
+            }
+
+            return Ok(Candidato);
+        }
+
+        [HttpPost("CriarCandidato")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Candidato))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CriarCandidato([FromBody] Candidato Candidato)
+        {
+            try
+            {
+                var novoCandidatoId = await _CandidatoService.CriarCandidatoAsync(Candidato);
+                return CreatedAtAction(nameof(ObterCandidatoPorId), new { id = novoCandidatoId }, Candidato);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("AtualizarCandidato/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AtualizarCandidato(int id, [FromBody] Candidato Candidato)
+        {
+            try
+            {
+                await _CandidatoService.AtualizarCandidatoAsync(id, Candidato);
+                return NoContent();
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("BuscarCandidatosPorNome")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Candidato>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> BuscarCandidatosPorNome(string nome)
+        {
+            var Candidatos = await _CandidatoService.BuscarCandidatosPorNomeAsync(nome);
+
+            if (Candidatos == null || !Candidatos.Any())
+            {
+                return NotFound("Nenhum Candidato encontrado com o nome especificado.");
+            }
+
+            return Ok(Candidatos);
+        }
+
+        [HttpDelete("DeletarCandidato/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeletarCandidato(int id)
+        {
+            try
+            {
+                await _CandidatoService.DeletarCandidatoAsync(id);
+                return NoContent();
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+    }
+}
