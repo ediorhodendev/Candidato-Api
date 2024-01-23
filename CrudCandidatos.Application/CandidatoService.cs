@@ -109,9 +109,7 @@ namespace CrudCandidatos.Application.Services
                 return false;
             }
 
-            // Implemente a lógica de validação do CPF de acordo com as regras.
-            // Esta é uma validação básica, e é altamente recomendável usar uma biblioteca de validação de CPF confiável.
-            // Aqui está um exemplo simples:
+            
             int[] weights = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             int sum = 0;
             for (int i = 0; i < 9; i++)
@@ -128,15 +126,14 @@ namespace CrudCandidatos.Application.Services
                 return false;
             }
 
-            // Continue a validação para os dígitos 10 e 11, se necessário.
+            
 
             return true;
         }
 
         private bool IsValidEmail(string email)
         {
-            // Implemente a validação do email usando expressão regular.
-            // Esta é uma validação básica, e existem expressões regulares mais complexas para validar emails.
+            
             string emailPattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
             return Regex.IsMatch(email, emailPattern);
         }

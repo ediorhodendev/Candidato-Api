@@ -27,7 +27,7 @@ namespace CrudCandidatosApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configuração do Entity Framework para uso do SQL Server
+            
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -49,19 +49,19 @@ namespace CrudCandidatosApi
             services.AddScoped<ICandidatoService, CandidatoService>();
             services.AddScoped<ICandidatoRepository, CandidatoRepository>();
 
-            // Configuração dos controllers da API
+            
             services.AddControllers();
 
-            // Adicione o serviço de migração do Entity Framework
+            
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            // Registra a classe de inicialização do banco de dados como um serviço
+            
             services.AddHostedService<DatabaseInitializer>();
 
-            // Configuração do Swagger/OpenAPI
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API de Candidatos", Version = "v1" });
@@ -73,7 +73,7 @@ namespace CrudCandidatosApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Configuração do Swagger em todos os ambientes
+            
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Candidatos v1"));
 
@@ -88,7 +88,7 @@ namespace CrudCandidatosApi
             }
             app.UseCors("AllowLocalhost4200");
 
-            // Obtenha um escopo de serviços para acessar o contexto do banco de dados
+            
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -98,7 +98,7 @@ namespace CrudCandidatosApi
                     
                     var context = services.GetRequiredService<AppDbContext>();
 
-                    // Aplicar migrações pendentes (caso existam)
+                    
                     context.Database.Migrate();
                 }
                 catch (Exception ex)

@@ -12,7 +12,7 @@ namespace CrudCandidatos.Application.Interfaces
 
         Task<int> CriarCandidatoAsync(Candidato Candidato);
         Task AtualizarCandidatoAsync(int id, Candidato Candidato);
-        Task<IEnumerable<Candidato>> BuscarCandidatosPorNomeAsync(string nome); // Novo método
+        Task<IEnumerable<Candidato>> BuscarCandidatosPorNomeAsync(string nome); 
         Task DeletarCandidatoAsync(int id);
     }
 }

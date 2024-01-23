@@ -51,7 +51,7 @@ public class CandidatoServiceTestsMemoria : IDisposable
 
         var CandidatoExistente = new Candidato { Nome = "Candidato Existente", Email = "candidato1", Cpf = "" };
 
-        // Adicione o Candidato existente ao contexto em memória
+        
         _dbContext.Candidatos.Add(CandidatoExistente);
         _dbContext.SaveChanges();
 
@@ -75,7 +75,7 @@ public class CandidatoServiceTestsMemoria : IDisposable
 
         var CandidatoExistente = new Candidato { Nome = "Candidato Existente", Email = "candidato1@gmail.com", Cpf = "692.093.420-54" };
 
-        // Adicione o Candidato existente ao contexto em memória
+       
         _dbContext.Candidatos.Add(CandidatoExistente);
         _dbContext.SaveChanges();
 
@@ -89,7 +89,7 @@ public class CandidatoServiceTestsMemoria : IDisposable
 
     public void Dispose()
     {
-        // Limpe o contexto em memória após os testes
+        
         _dbContext.Database.EnsureDeleted();
         _dbContext.Dispose();
     }
