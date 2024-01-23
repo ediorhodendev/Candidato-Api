@@ -43,6 +43,16 @@ namespace CrudCandidatosApi.Controllers
 
             return Ok(Candidato);
         }
+        [HttpGet("verificacpfexiste/{cpf}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> VerificarCpfExiste(string cpf)
+        {
+            var cpfExiste = await _CandidatoService.VerificarCpfExisteAsync(cpf);
+
+            return Ok(cpfExiste);
+        }
+
+
 
         [HttpPost("CriarCandidato")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Candidato))]

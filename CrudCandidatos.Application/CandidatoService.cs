@@ -28,6 +28,13 @@ namespace CrudCandidatos.Application.Services
             return await _CandidatoRepository.ObterCandidatoPorIdAsync(id);
         }
 
+        public async Task<bool> VerificarCpfExisteAsync(string cpf)
+        {
+            var candidato = await _CandidatoRepository.VerificarCpfExistenteAsync(cpf);
+            return candidato != null;
+        }
+
+
         public async Task<int> CriarCandidatoAsync(Candidato Candidato)
         {
             if (!IsValidCPF(Candidato.Cpf))

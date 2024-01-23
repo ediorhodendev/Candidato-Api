@@ -27,6 +27,12 @@ namespace CrudCandidatos.Infrastructure.Repositories
             return await _dbContext.Candidatos.FindAsync(id);
         }
 
+        public async Task<bool> VerificarCpfExistenteAsync(string cpf)
+        {
+            var candidato = await _dbContext.Candidatos.FirstOrDefaultAsync(c => c.Cpf == cpf);
+            return candidato != null;
+        }
+
         public async Task<IEnumerable<Candidato>> BuscarCandidatosPorNomeAsync(string nome)
         {
             return await _dbContext.Candidatos
@@ -34,28 +40,36 @@ namespace CrudCandidatos.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> CriarCandidatoAsync(Candidato Candidato)
+        public async Task<int> CriarCandidatoAsync(Candidato candidato)
         {
-            if (Candidato == null)
+            if (candidato == null)
             {
-                throw new ArgumentNullException(nameof(Candidato));
+                throw new ArgumentNullException(nameof(candidato));
             }
 
-            _dbContext.Candidatos.Add(Candidato);
+            // Verificar se o CPF já existe
+            var cpfExistente = await VerificarCpfExistenteAsync(candidato.Cpf);
+
+            if (cpfExistente)
+            {
+                throw new ArgumentException("CPF já cadastrado.");
+            }
+
+            _dbContext.Candidatos.Add(candidato);
             await _dbContext.SaveChangesAsync();
-            return Candidato.Id;
+            return candidato.Id;
         }
 
-        public async Task AtualizarCandidatoAsync(int v, Candidato Candidato)
+        public async Task AtualizarCandidatoAsync(int id, Candidato candidato)
         {
-            if (Candidato == null)
+            if (candidato == null)
             {
-                throw new ArgumentNullException(nameof(Candidato));
+                throw new ArgumentNullException(nameof(candidato));
             }
 
-            if (!_dbContext.Candidatos.Local.Contains(Candidato))
+            if (!_dbContext.Candidatos.Local.Contains(candidato))
             {
-                _dbContext.Entry(Candidato).State = EntityState.Modified;
+                _dbContext.Entry(candidato).State = EntityState.Modified;
             }
 
             await _dbContext.SaveChangesAsync();
@@ -63,14 +77,14 @@ namespace CrudCandidatos.Infrastructure.Repositories
 
         public async Task DeletarCandidatoAsync(int id)
         {
-            var Candidato = await _dbContext.Candidatos.FindAsync(id);
+            var candidato = await _dbContext.Candidatos.FindAsync(id);
 
-            if (Candidato == null)
+            if (candidato == null)
             {
                 throw new KeyNotFoundException("Candidato não encontrado.");
             }
 
-            _dbContext.Candidatos.Remove(Candidato);
+            _dbContext.Candidatos.Remove(candidato);
             await _dbContext.SaveChangesAsync();
         }
     }

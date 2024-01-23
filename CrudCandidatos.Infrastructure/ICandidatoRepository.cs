@@ -23,6 +23,14 @@ namespace CrudCandidatos.Infrastructure.Interfaces
         Task<Candidato> ObterCandidatoPorIdAsync(int id);
 
         /// <summary>
+        /// Obtém um Candidato por ID de forma assíncrona.
+        /// </summary>
+        /// <param name="cpf">O ID do Candidato a ser obtido.</param>
+        /// <returns>O Candidato correspondente ao ID especificado.</returns>
+        Task<bool> VerificarCpfExistenteAsync(string cpf);
+        
+
+        /// <summary>
         /// Cria um novo Candidato de forma assíncrona.
         /// </summary>
         /// <param name="Candidato">O Candidato a ser criado.</param>

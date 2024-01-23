@@ -8,6 +8,8 @@ namespace CrudCandidatos.Application.Interfaces
     {
         Task<IEnumerable<Candidato>> ListarCandidatosAsync();
         Task<Candidato> ObterCandidatoPorIdAsync(int id);
+        Task<bool> VerificarCpfExisteAsync(string cpf);
+
         Task<int> CriarCandidatoAsync(Candidato Candidato);
         Task AtualizarCandidatoAsync(int id, Candidato Candidato);
         Task<IEnumerable<Candidato>> BuscarCandidatosPorNomeAsync(string nome); // Novo método
