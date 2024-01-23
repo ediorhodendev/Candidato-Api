@@ -31,7 +31,7 @@ namespace CrudCandidatos.Application.Services
         public async Task<bool> VerificarCpfExisteAsync(string cpf)
         {
             var candidato = await _CandidatoRepository.VerificarCpfExistenteAsync(cpf);
-            return candidato != null;
+            return candidato;
         }
 
 
