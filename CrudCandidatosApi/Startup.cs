@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using static OpenQA.Selenium.VirtualAuth.VirtualAuthenticatorOptions;
+using static System.Net.WebRequestMethods;
 
 namespace CrudCandidatosApi
 {
@@ -30,6 +32,18 @@ namespace CrudCandidatosApi
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost4200",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+
 
             // Injeção de dependência dos serviços e repositórios
             services.AddScoped<ICandidatoService, CandidatoService>();
@@ -54,6 +68,9 @@ namespace CrudCandidatosApi
             });
         }
 
+
+       
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Configuração do Swagger em todos os ambientes
@@ -69,6 +86,7 @@ namespace CrudCandidatosApi
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseCors("AllowLocalhost4200");
 
             // Obtenha um escopo de serviços para acessar o contexto do banco de dados
             using (var scope = app.ApplicationServices.CreateScope())

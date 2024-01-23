@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrudCandidatos.Domain\CrudCandidatos.Domain.csproj" />
-    <ProjectReference Include="..\CrudProdutos.Domain\CrudCandidatos.Domain.csproj" />
+    
   </ItemGroup>
 
   <PropertyGroup>
